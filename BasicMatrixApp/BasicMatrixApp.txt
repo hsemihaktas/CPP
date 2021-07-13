@@ -1,0 +1,201 @@
+/****************************************************
+		@author Hasan Semih Aktaþ	
+****************************************************/
+#include <iostream>
+#include <iomanip>	//setw komutu için gerekli olan kütüphane
+#include <ctime>	//srand rastgele random atamak için gerekli olan kütüphane
+using namespace std;
+void menu();
+void ekranaYazdýr(int matrisBoyutu, int satirSayaci, int matris[26][26], int sutunSayaci);
+int main() {
+	int matrisBoyutu, satirSayaci, sutunSayaci, islem, satir, sutun;
+	int matris[26][26];//matris degeri 1 den baslattigim icin 25 eleman tutmasi icin 26 yazmam gerekti
+	int matrisTut[26][26];//matris degeri 1 den baslattigim icin 25 elamn tutmasi 26 yazmam gerekti
+	int tekSayac = 0;
+	int ciftAdedi = 0;
+	int tekSutun = 1;
+	srand(time(0));
+	cout << "Matrisin Boyutunu Giriniz:";
+	cin >> matrisBoyutu;
+	while (matrisBoyutu < 5 || 25 < matrisBoyutu)	//Matris boyutunun 5 ile 25 arasýnda olmasý için 
+	{
+		cout << "Matris Boyutu 25 den kucuk 5 den buyuk olmalidir" << endl;
+		cin >> matrisBoyutu;
+
+	}
+	for (satirSayaci = 1; satirSayaci <= matrisBoyutu; satirSayaci++)
+	{
+		for (sutunSayaci = 1; sutunSayaci <= matrisBoyutu; sutunSayaci++)
+		{																		
+			matris[satirSayaci][sutunSayaci] = rand() % 10;					//0-9 arasýnda rastgele deger atamak için yapýlan islem
+		}
+	}
+	do
+	{
+		ekranaYazdýr(matrisBoyutu, satirSayaci, matris, sutunSayaci);
+		menu();
+		cin >> islem;
+		while (islem < 1 || 4 < islem)
+		{
+			menu();
+			cin >> islem;
+		}
+		switch (islem)
+		{
+		case 1:
+		{
+			cout << "Degistirilecek Satiri Seciniz:" << endl;
+			cin >> satir;
+			if (satir <= matrisBoyutu)	//Girilen satir degeri matris boyutundan kucuk yada esitse bu islem
+			{
+				cout << "Hangi Sutun Ile Degistirilecegini Seciniz:" << endl;
+				cin >> sutun;
+				if (sutun <= matrisBoyutu)	//Girilen sutun degeri matris boyutundan kucuk yada esitse bu islem
+				{
+					for (sutunSayaci = 1; sutunSayaci <= matrisBoyutu; sutunSayaci++)
+					{
+						matrisTut[satir][sutunSayaci] = matris[satir][sutunSayaci]; //matristeki degerleri hafýzada tutmak icin baska bir matrise aktarýyor
+					}
+					for (sutunSayaci = 1; sutunSayaci <= matrisBoyutu; sutunSayaci++)
+					{
+						matris[satir][sutunSayaci] = matris[sutunSayaci][sutun]; 
+						matris[sutunSayaci][sutun] = matrisTut[satir][sutunSayaci];
+					}
+					matris[satir][sutun] = matrisTut[satir][satir] + matris[satir][sutun];	//matrisler degistirilerken kesiþtikleri yerdeki sayýlarýn toplamý yazýlmasý için yapýlmasý gereken islem
+					ekranaYazdýr(matrisBoyutu, satirSayaci, matris, sutunSayaci);
+				}
+				else              //Girilen sutun degeri matris boyutundan buyukse bu islem
+				{
+					cout << "Girdiginiz sutun degeri matris boyutundan buyuk olamaz." << endl;
+				}
+			}
+			else     //Girilen satir degeri matris boyutundan buyukse bu islem
+			{
+				cout << "Girdiginiz satir degeri matris boyutundan buyuk olamaz." << endl;
+			}
+			break;
+		}
+		case 2:
+		{
+			cout << "Hangi Satirda Tekler Basa Gelecek:" << endl;
+			cin >> satir;
+			if (satir <= matrisBoyutu)
+			{
+				for (sutunSayaci = 1; sutunSayaci <= matrisBoyutu; sutunSayaci++)
+				{
+					matrisTut[satir][sutunSayaci] = matris[satir][sutunSayaci];	//matristeki sayýlarý hafýzada tutmak icin baska bir matrise aktarýyor
+				}
+				for (sutunSayaci = 1; sutunSayaci <= matrisBoyutu; sutunSayaci++)
+				{
+					if (matrisTut[satir][sutunSayaci] % 2 == 1)//matristeki o degerin 2 ye bölümünden kalan 1 ise bu islem
+					{
+						matris[satir][tekSutun] = matrisTut[satir][sutunSayaci];//tek sayilarý sýrasýyla basa alýyor
+						tekSutun++;
+					}
+					else//matristeki o degerin 2 ye bölümünden kalan 0 ise bu islem
+					{
+						matris[satir][matrisBoyutu - ciftAdedi] = matrisTut[satir][sutunSayaci];//cift sayilarý saðdan sola doðru sýrasýyla yazýyor
+						ciftAdedi++;
+					}
+				}
+				ekranaYazdýr(matrisBoyutu, satirSayaci, matris, sutunSayaci);
+				sutun = 1;//bu degeri yazmadýgýmýz zaman sutun degerini bilmediginden do while hata veriyor o yuzden matrisboyutundan kucuk ve ya esit bir deger yazdim
+			}
+			else
+			{
+				cout << "Girdiginiz satir degeri matris boyutundan buyuk olamaz." << endl;
+				sutun = 1;//bu degeri yazmadýgýmýz zaman sutun degerini bilmediginden do while hata veriyor o yuzden matrisboyutundan kucuk ve ya esit bir deger yazdim
+			}
+			break;
+		}
+		case 3:
+		{
+			cout << "Hangi sutunu ters cevirmek istiyorsunuz:" << endl;
+			cin >> sutun;
+			if (sutun <= matrisBoyutu)
+			{
+				for (satirSayaci = 1; satirSayaci <= matrisBoyutu; satirSayaci++)
+				{
+					matrisTut[satirSayaci][sutun] = matris[satirSayaci][sutun];//matristeki degerleri hafizada tutmak icin baska bir matrise aktariyor
+				}
+				for (satirSayaci = 1; satirSayaci <= matrisBoyutu; satirSayaci++)
+				{
+					matris[satirSayaci][sutun] = matrisTut[matrisBoyutu - satirSayaci + 1][sutun];
+				}
+				ekranaYazdýr(matrisBoyutu, satirSayaci, matris, sutunSayaci);
+				satir = 1;//bu degeri yazmadýgýmýz zaman satir degerini bilmediginden do while hata veriyor o yuzden matrisboyutundan kucuk ve ya esit bir deger yazdim
+			}
+			else
+			{
+				cout << "Girdiginiz sutun degeri matris boyutundan buyuk olamaz." << endl;
+				satir = 1;////bu degeri yazmadýgýmýz zaman satir degerini bilmediginden do while hata veriyor o yuzden matrisboyutundan kucuk ve ya esit bir deger yazdim
+			}
+			break;
+		}
+		case 4:
+		{
+			int sonuc = 0;
+			for (satirSayaci = 1; satirSayaci <= matrisBoyutu; satirSayaci++)
+			{
+				for (sutunSayaci = 1; sutunSayaci <= matrisBoyutu; sutunSayaci++)
+				{
+					sonuc += matris[satirSayaci][sutunSayaci];//matristeki elemanlarý teker teker sonuca ekliyor 
+				}
+			}
+			for (satirSayaci = 1; satirSayaci <= matrisBoyutu; satirSayaci++) {
+				for (sutunSayaci = 1; sutunSayaci <= matrisBoyutu; sutunSayaci++)
+				{
+					matris[satirSayaci][sutunSayaci] = sonuc - matris[satirSayaci][sutunSayaci];//matristeki elemanlarý teker teker kalan sonuctan cýkarýyor
+					sonuc = matris[satirSayaci][sutunSayaci];//matristeki elemanýn deger kalan sonuc degeri oluyor
+				}
+			}
+			ekranaYazdýr(matrisBoyutu, satirSayaci, matris, sutunSayaci);
+			sutun = satir = 1;////bu degeri yazmadýgýmýz zaman sutun-satir degerini bilmediginden do while hata veriyor o yuzden matrisboyutundan kucuk ve ya esit bir deger yazdim
+			break;
+		}
+		}
+	}while (matrisBoyutu < satir || matrisBoyutu < sutun);
+
+	system("pause");
+}
+
+
+
+
+void menu() {
+	cout << "1.Sutun Satir Degistir" << endl;
+	cout << "2.Tekleri Basa Al (Satir)" << endl;
+	cout << "3.Ters Cevir(Sutun)" << endl;
+	cout << "4.Toplamlari Yazdir" << endl;
+	cout << "Yapilacak Islemi Seciniz" << endl;
+}
+
+void ekranaYazdýr(int matrisBoyutu,int satirSayaci,int matris[26][26],int sutunSayaci) {
+	cout << "   ";
+	for (satirSayaci = 1; satirSayaci <= matrisBoyutu; satirSayaci++)
+	{
+		cout << setw(4) << satirSayaci;
+	}
+	cout << endl << "   ";
+	for (satirSayaci = 1; satirSayaci <= matrisBoyutu; satirSayaci++)
+	{
+		cout << "____";
+	}
+	cout << endl;
+	for (satirSayaci = 1; satirSayaci <= matrisBoyutu; satirSayaci++)
+	{
+		if (satirSayaci < 10)
+		{
+			cout << satirSayaci << " |";
+		}
+		else
+		{
+			cout << satirSayaci << "|";
+		}
+		for (sutunSayaci = 1; sutunSayaci <= matrisBoyutu; sutunSayaci++)
+		{
+			cout << setw(4) << matris[satirSayaci][sutunSayaci];
+		}
+		cout << endl << endl;
+	}
+}
