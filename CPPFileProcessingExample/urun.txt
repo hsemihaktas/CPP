@@ -1,0 +1,2 @@
+5 urun1 20 15 marka1
+10 urun2 40 25 marka2
